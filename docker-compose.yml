@@ -1,0 +1,61 @@
+version: "3"
+
+# define the volumes that will be used by the services
+volumes:
+  extensions:
+  data:
+  snapshots:
+  uploads:
+  cache:
+  database:
+
+# define the networks that will be used by the services
+networks:
+  directus:
+
+# define the services that will be used by the application
+services:
+  database:
+    container_name: database
+    image: postgres:15-alpine
+    volumes:
+      - data:/var/lib/postgresql/data
+    networks:
+      - directus
+    ports:
+      - 5432
+    env_file: .env
+
+  cache:
+    container_name: cache
+    image: redis:7-alpine
+    networks:
+      - directus
+    volumes:
+      - cache:/data
+    ports:
+      - 6379
+    env_file: .env
+
+# define the custom directus service
+  custom-directus:
+    container_name: custom-directus
+    # build the image from the Dockerfile in the current directory
+    # ---
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    # ---
+    ports:
+      - 8055:8055
+    volumes:
+      - extensions:/directus/extensions
+      - snapshots:/directus/snapshots
+      - uploads:/directus/uploads
+      - database:/directus/database
+    networks:
+      - directus
+    depends_on:
+      - cache
+      - database
+    env_file: .env
