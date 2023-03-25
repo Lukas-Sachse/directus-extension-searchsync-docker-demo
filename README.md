@@ -32,7 +32,7 @@ server: {
 docker compose -f docker-compose.yml up --build
 ```
 
-## 4. Checking Loaded extensions & notice the warning
+## 4. Check - Loaded extensions & notice the warning
 
 ![step_4_notice_warning](https://user-images.githubusercontent.com/62059415/227744668-f0087436-0fcc-452b-a167-b72573ba0960.png)
 
